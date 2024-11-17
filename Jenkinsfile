@@ -1,6 +1,8 @@
 pipeline {
     agent any
 
+    tools {nodejs "nodejs"}
+
     environment {
         GIT_URL = "https://github.com/Soukaina235/projet-ai-front-test.git"
         DOCKER_IMAGE = 'ai-front'
