@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_NAME = 'ai-front'
+        DOCKER_IMAGE_NAME = 'soukaina235/ai-front'
         DOCKER_CREDENTIALS = 'soukaina-docker-hub'
     }
 
