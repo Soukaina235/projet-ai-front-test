@@ -29,20 +29,13 @@ pipeline {
             }
         }
 
-        stage('Login to Docker Hub') {
+         stage('Docker Build and Push') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    docker.withRegistry('', DOCKER_CREDENTIALS) {
+                        DOCKER_IMAGE = docker.build(DOCKER_IMAGE_NAME)
+                        DOCKER_IMAGE.push()
                     }
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    sh 'docker push ${DOCKER_IMAGE_NAME}:latest'
                 }
             }
         }
@@ -54,6 +47,7 @@ pipeline {
                 }
             }
         }
+
     }
 
     post {
