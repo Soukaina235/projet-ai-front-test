@@ -16,8 +16,20 @@ pipeline {
                 }
             }
         }
-
         
+        stage('Git Checkout') {
+            steps {
+                git url: "https://github.com/Soukaina235/projet-ai-front-test.git", branch: "main"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${dockerHubUser}/${DOCKER_IMAGE_NAME}:latest")
+                }
+            }
+        }
     }
 
     post {
