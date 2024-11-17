@@ -2,31 +2,52 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_NAME = 'ai-front'
-        DOCKER_CREDENTIALS = 'soukaina-docker-hub'
+        GIT_URL = "https://github.com/Soukaina235/projet-ai-front-test.git"
+        DOCKER_IMAGE = 'ai-front'
+        DOCKER_TAG_NAME = 'latest'
+        DOCKER_REGISTRY = 'soukaina915/ai-front'
+        DOCKER_REGISTRY_CREDENTIALS_ID = 'soukaina-docker-hub' 
     }
 
     stages {
-        stage('Login to Docker Hub') {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Git Checkout') {
+            steps {
+                echo "Cloning code..."
+                git url: GIT_URL, branch: "main"
+            }
+        }
+
+        stage('Test') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS, passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                        sh "docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
+                    echo "Running tests..."
+                    sh 'npm test'
+                }
+            }
+        }
+
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    echo "Building and pushing docker image..."
+                    docker.withRegistry('', DOCKER_REGISTRY_CREDENTIALS_ID) {
+                        DOCKER_IMAGE = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG_NAME}")
+                        DOCKER_IMAGE.push()
                     }
                 }
             }
         }
-        
-        stage('Git Checkout') {
-            steps {
-                git url: "https://github.com/Soukaina235/projet-ai-front-test.git", branch: "main"
-            }
-        }
 
-        stage('Build Docker Image') {
+        stage('Deploy') {
             steps {
                 script {
-                    docker.build("${dockerHubUser}/${DOCKER_IMAGE_NAME}:latest")
+                    echo "Deployment stage"
                 }
             }
         }
@@ -34,12 +55,15 @@ pipeline {
 
     post {
         always {
+            // Cleanup workspace after build
             cleanWs()
         }
         success {
+            // Actions on successful deployment
             echo 'Deployment successful!'
         }
         failure {
+            // Actions on failed deployment
             echo 'Deployment failed!'
         }
     }
