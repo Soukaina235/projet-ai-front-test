@@ -35,6 +35,7 @@ pipeline {
                 sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
                 sh "docker push ${env.dockerHubUser}/${DOCKER_IMAGE_NAME}:latest"
                 }
+            }
         }
 
         stage('Deploy') {
