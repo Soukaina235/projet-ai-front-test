@@ -5,7 +5,6 @@ pipeline {
 
     environment {
         GIT_URL = "https://github.com/Soukaina235/projet-ai-front-test.git"
-        DOCKER_IMAGE = 'ai-front'
         DOCKER_TAG_NAME = 'latest'
         DOCKER_REGISTRY = 'soukaina915/ai-front'
         DOCKER_REGISTRY_CREDENTIALS_ID = 'soukaina-docker-hub' 
@@ -47,13 +46,15 @@ pipeline {
             steps {
                 script {
                     echo "Building and pushing docker image..."
+                    def dockerImage = docker.build("${DOCKER_REGISTRY}:${DOCKER_TAG_NAME}")
+                    
                     docker.withRegistry('', DOCKER_REGISTRY_CREDENTIALS_ID) {
-                        DOCKER_IMAGE = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG_NAME}")
-                        DOCKER_IMAGE.push()
+                        dockerImage.push()
                     }
                 }
             }
         }
+
 
         stage('Deploy') {
             steps {
