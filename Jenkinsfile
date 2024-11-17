@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_NAME = 'soukaina235/ai-front'
+        DOCKER_IMAGE_NAME = 'ai-front'
         DOCKER_CREDENTIALS = 'soukaina-docker-hub'
     }
 
@@ -29,15 +29,12 @@ pipeline {
             }
         }
 
-         stage('Docker Build and Push') {
+        stage('Docker Push') {
             steps {
-                script {
-                    docker.withRegistry('', DOCKER_CREDENTIALS) {
-                        DOCKER_IMAGE = docker.build(DOCKER_IMAGE_NAME)
-                        DOCKER_IMAGE.push()
-                    }
+                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS, passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                sh "docker push ${env.dockerHubUser}/${DOCKER_IMAGE_NAME}:latest"
                 }
-            }
         }
 
         stage('Deploy') {
