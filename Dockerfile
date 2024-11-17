@@ -1,16 +1,21 @@
-# FROM node:16.16.0-buster AS build
-# WORKDIR /build
+FROM node:20 as build
 
-# COPY package.json package.json
-# COPY package-lock.json package-lock.json
-# RUN npm ci
+WORKDIR /app
 
-# COPY public/ public
-# COPY src/ src
-# RUN npm run build
+COPY package*.json ./
 
-# FROM httpd:alpine
-# WORKDIR /usr/local/apache2/htdocs
-# COPY --from=build /build/build/ .
-# RUN chown -R www-data:www-data /usr/local/apache2/htdocs \
-#     && sed -i "s/Listen 80/Listen \${PORT}/g" /usr/local/apache2/conf/httpd.conf
+RUN npm install
+
+COPY . .
+
+RUN npm run build --prod
+
+FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+COPY --from=build /app/dist/ /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
