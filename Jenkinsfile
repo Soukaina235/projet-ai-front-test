@@ -42,6 +42,26 @@ pipeline {
             }
         }
 
+        stage("Sonarqube Analysis") {
+            environment {
+                SCANNER_HOME = tool 'sonar'  // sonar-scanner is the name of the tool in the manage jenkins> tool configuration
+            }
+            steps {
+                withSonarQubeEnv(installationName: 'sonar' , credentialsId: SONARQUBE_CREDENTIALS_ID) {
+                    // sh '''
+                    // ${scannerHome}/bin/sonar-scanner \
+                    // -D sonar.projectKey=YOUR_PROJECT_KEY_HERE \
+                    // -D sonar.token=
+                    // -D sonar.sources=. \
+                    // -D sonar.host.url=http://34.41.170.207:9000 \
+                    // -D sonar.exclusions=YOUR_EXCLUSIONS_HERE
+                    // -D sonar.test.inclusions=index.test.js
+                    // '''
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
         stage('Build and Push Docker Image') {
             steps {
                 script {
