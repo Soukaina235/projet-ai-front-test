@@ -48,16 +48,7 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv(installationName: 'sonar' , credentialsId: 'sonar') {
-                    // sh '''
-                    // ${scannerHome}/bin/sonar-scanner \
-                    // -D sonar.projectKey=YOUR_PROJECT_KEY_HERE \
-                    // -D sonar.token=
-                    // -D sonar.sources=. \
-                    // -D sonar.host.url=http://34.41.170.207:9000 \
-                    // -D sonar.exclusions=YOUR_EXCLUSIONS_HERE
-                    // -D sonar.test.inclusions=index.test.js
-                    // '''
-                    sh "${scannerHome}/bin/sonar-scanner"
+                    sh "${SCANNER_HOME}/bin/sonar-scanner"
                 }
             }
         }
