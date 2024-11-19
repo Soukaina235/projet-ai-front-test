@@ -47,7 +47,7 @@ pipeline {
                 SCANNER_HOME = tool 'sonar'  // sonar-scanner is the name of the tool in the manage jenkins> tool configuration
             }
             steps {
-                withSonarQubeEnv(installationName: 'sonar' , credentialsId: SONARQUBE_CREDENTIALS_ID) {
+                withSonarQubeEnv(installationName: 'sonar' , credentialsId: 'sonar') {
                     // sh '''
                     // ${scannerHome}/bin/sonar-scanner \
                     // -D sonar.projectKey=YOUR_PROJECT_KEY_HERE \
