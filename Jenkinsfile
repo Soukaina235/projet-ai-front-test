@@ -43,6 +43,15 @@ pipeline {
             }
         }
 
+        stage('Print JSON content') {
+            steps {
+                script {
+                    sh 'cat ./test-output.json'
+                }
+            }
+        }
+
+
         stage('Parse and Display JSON Results') {
             steps {
                 script {
