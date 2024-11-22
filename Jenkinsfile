@@ -92,7 +92,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "Deployment stage"
+                    echo "Deployment stage..."
                 }
             }
         }
