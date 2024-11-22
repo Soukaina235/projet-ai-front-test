@@ -56,7 +56,8 @@ pipeline {
             steps {
                 script {
                     unstash 'test-results'
-                    def jsonResult = readJSON file: './test-output.json'
+                    def jsonString = sh(script: 'cat ./test-output.json', returnStdout: true).trim()
+                    def jsonResult = readJSON text: jsonString
 
                     // Print out summary info
                     echo "Total Tests: ${jsonResult.numTotalTests}"
