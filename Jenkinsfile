@@ -21,6 +21,7 @@ pipeline {
             steps {
                 echo "Cloning code..."
                 git url: GIT_URL, branch: "${env.BRANCH_NAME}"
+                echo "Checked out code from ${env.BRANCH_NAME} branch"
             }
         }
 
@@ -87,10 +88,7 @@ pipeline {
 
         stage('Deploy') {
             when {
-                anyOf {
-                    branch 'main'
-                    branch 'develop'
-                }
+                branch 'main'
             }
             steps {
                 script {
