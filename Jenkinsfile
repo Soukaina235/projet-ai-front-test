@@ -19,9 +19,8 @@ pipeline {
 
         stage('Git Checkout') {
             steps {
-                echo "Cloning code..."
-                git url: GIT_URL, branch: "${env.BRANCH_NAME}"
-                echo "Checked out code from ${env.BRANCH_NAME} branch"
+                echo "Cloning code from branch..."
+                git url: GIT_URL, branch: "develop"
             }
         }
 
