@@ -52,33 +52,33 @@ pipeline {
         }
 
 
-        stage('Parse and Display JSON Results') {
-            steps {
-                script {
-                    unstash 'test-results'
+        // stage('Parse and Display JSON Results') {
+        //     steps {
+        //         script {
+        //             unstash 'test-results'
 
-                    // Read the single-line JSON file as a string
-                    def rawJson = readFile('test-output.json')
+        //             // Read the single-line JSON file as a string
+        //             def rawJson = readFile('test-output.json')
 
-                    // Parse the raw JSON using JsonSlurper
-                    def jsonResult = new groovy.json.JsonSlurper().parseText(rawJson)
+        //             // Parse the raw JSON using JsonSlurper
+        //             def jsonResult = new groovy.json.JsonSlurper().parseText(rawJson)
 
-                    // Print out summary info
-                    echo "Total Tests: ${jsonResult.numTotalTests}"
-                    echo "Passed: ${jsonResult.numPassedTests}"
-                    echo "Failed: ${jsonResult.numFailedTests}"
+        //             // Print out summary info
+        //             echo "Total Tests: ${jsonResult.numTotalTests}"
+        //             echo "Passed: ${jsonResult.numPassedTests}"
+        //             echo "Failed: ${jsonResult.numFailedTests}"
 
-                    // Loop through individual tests and display their status
-                    jsonResult.testResults.each { testResult ->
-                        testResult.assertionResults.each { assertion ->
-                            echo "Test: ${assertion.fullName}"
-                            echo "Status: ${assertion.status}"
-                            echo "Duration: ${assertion.duration} ms"
-                        }
-                    }
-                }
-            }
-        }
+        //             // Loop through individual tests and display their status
+        //             jsonResult.testResults.each { testResult ->
+        //                 testResult.assertionResults.each { assertion ->
+        //                     echo "Test: ${assertion.fullName}"
+        //                     echo "Status: ${assertion.status}"
+        //                     echo "Duration: ${assertion.duration} ms"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         stage("Sonarqube Analysis") {
             environment {
