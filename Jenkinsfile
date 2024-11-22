@@ -37,10 +37,8 @@ pipeline {
             steps {
                 script {
                     echo "Running Vitest tests..."
-                    sh 'npm test'
-
-                    // sh 'npm run test -- --reporter=vitest-junit-reporter'
-                    // junit '**/test-results/*.xml'
+                    sh 'npm test -- --reporter=json > test-output.json'
+                    stash name: 'test-results', includes: 'test-output.json'
                 }
             }
         }
@@ -48,7 +46,8 @@ pipeline {
         stage('Parse and Display JSON Results') {
             steps {
                 script {
-                    def jsonResult = readJSON file: '**/test-output.json'
+                    unstash 'test-results'
+                    def jsonResult = readJSON file: './test-output.json'
 
                     // Print out summary info
                     echo "Total Tests: ${jsonResult.numTotalTests}"
