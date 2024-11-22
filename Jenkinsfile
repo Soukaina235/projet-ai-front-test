@@ -20,7 +20,7 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 echo "Cloning code from branch..."
-                git url: GIT_URL, branch: "develop"
+                git url: GIT_URL, branch: "main"
             }
         }
 
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script { 
                     echo "Running Vitest tests..."
-                    sh 'npm test -- --reporter=json > test-output.json --coverage'
+                    sh 'npm test -- --reporter=json > test-output.json'
                     stash name: 'test-results', includes: 'test-output.json'
                 }
             }
@@ -86,9 +86,6 @@ pipeline {
 
 
         stage('Deploy') {
-            when {
-                branch 'main'
-            }
             steps {
                 script {
                     echo "Deployment stage...."
