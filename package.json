@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "vitest --reporter=json --outputFile=./test-output.json",
+    "test": "vitest",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
