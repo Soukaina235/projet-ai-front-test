@@ -33,11 +33,14 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Run Unit Tests') {
             steps {
                 script {
-                    echo "Running tests..."
-                    //sh 'npm test'
+                    echo "Running Vitest tests..."
+                    sh 'npm test'
+
+                    // sh 'npm run test -- --reporter=vitest-junit-reporter'
+                    // junit '**/test-results/*.xml'
                 }
             }
         }
