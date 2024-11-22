@@ -45,6 +45,28 @@ pipeline {
             }
         }
 
+        stage('Parse and Display JSON Results') {
+            steps {
+                script {
+                    def jsonResult = readJSON file: '**/test-output.json'
+
+                    // Print out summary info
+                    echo "Total Tests: ${jsonResult.numTotalTests}"
+                    echo "Passed: ${jsonResult.numPassedTests}"
+                    echo "Failed: ${jsonResult.numFailedTests}"
+
+                    // Loop through individual tests and display their status
+                    jsonResult.testResults.each { testResult ->
+                        testResult.assertionResults.each { assertion ->
+                            echo "Test: ${assertion.fullName}"
+                            echo "Status: ${assertion.status}"
+                            echo "Duration: ${assertion.duration} ms"
+                        }
+                    }
+                }
+            }
+        }
+
         stage("Sonarqube Analysis") {
             environment {
                 SCANNER_HOME = tool 'sonar'  // sonar-scanner is the name of the tool in the manage jenkins> tool configuration
