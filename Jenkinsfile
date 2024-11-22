@@ -56,8 +56,18 @@ pipeline {
             steps {
                 script {
                     unstash 'test-results'
-                    def jsonString = sh(script: 'cat ./test-output.json', returnStdout: true).trim()
-                    def jsonResult = readJSON text: jsonString
+
+                    // Read the single-line JSON file as a string
+                    def rawJson = readFile('test-output.json')
+
+                    // Manually format the JSON with Groovy
+                    def prettyJson = new groovy.json.JsonOutput.prettyPrint(rawJson)
+
+                    // Parse the prettified JSON
+                    def jsonResult = new groovy.json.JsonSlurper().parseText(prettyJson)
+
+                    // def jsonString = sh(script: 'cat ./test-output.json', returnStdout: true).trim()
+                    // def jsonResult = readJSON text: jsonString
 
                     // Print out summary info
                     echo "Total Tests: ${jsonResult.numTotalTests}"
