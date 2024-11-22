@@ -10,7 +10,13 @@ export default defineConfig({
     setupFiles: './setupTests.js',  // Point to your setup file
     reporters: [
       'default',
-      ['junit', { suiteName: 'UI tests' }]
+      ['junit', { suiteName: 'UI tests' }],
+      'lcov',
     ],
+    coverage: {
+      reporter: ['lcov', 'text', 'json'], // 'lcov' generates the report in a format SonarQube can read
+      all: true,
+      exclude: ['node_modules/**', 'tests/**'], 
+    },
   }
 })
